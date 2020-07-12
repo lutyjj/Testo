@@ -10,10 +10,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/item_answer"
+        android:background="@drawable/item_background"
         android:clickable="true"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="18dp"
         android:text="answer_title"
         android:textColor="@android:color/primary_text_light"
         android:textSize="18sp" />

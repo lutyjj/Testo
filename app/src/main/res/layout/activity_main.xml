@@ -130,14 +130,12 @@
         android:id="@+id/rvAnswers"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:layoutAnimation="@anim/layout_animation"
         android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/questionLayout"
+        app:layout_constraintTop_toBottomOf="@id/questionLayout"
         tools:itemCount="5"
         tools:listitem="@layout/item_answer">
 

@@ -1,26 +1,27 @@
 package by.lutyjj.testo
 
 import AnswerAdapter
-import android.content.Context
-import android.graphics.Color
+import MyItemDetailsLookup
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.sql.Time
 
 
 class MainActivity : AppCompatActivity() {
+    var tracker: SelectionTracker<Long>? = null
+    private val adapter = AnswerAdapter()
     private lateinit var list: ArrayList<String>
     private var totalQuestions: Int = 0
 
@@ -30,21 +31,39 @@ class MainActivity : AppCompatActivity() {
 
         val db = DatabaseHelper(this)
         val question = findViewById<TextView>(R.id.questionTitle)
-        list = updateList(db)
-        val rvAnswers = findViewById<View>(R.id.rvAnswers) as RecyclerView
-        val adapter = AnswerAdapter(list)
-        rvAnswers.adapter = adapter
-        rvAnswers.layoutManager = LinearLayoutManager(this)
-        rvAnswers.addItemDecoration(MarginItemDecoration(
-            resources.getDimension(R.dimen.default_padding).toInt()))
 
+        val rvAnswers = findViewById<View>(R.id.rvAnswers) as RecyclerView
+        rvAnswers.adapter = adapter
+        adapter.list = updateList(db)
+        adapter.notifyDataSetChanged()
+
+        rvAnswers.layoutManager = LinearLayoutManager(this)
+        rvAnswers.addItemDecoration(
+            MarginItemDecoration(
+                resources.getDimension(R.dimen.default_padding).toInt()
+            )
+        )
+
+        tracker = SelectionTracker.Builder<Long>(
+            "mySelection",
+            rvAnswers,
+            StableIdKeyProvider(rvAnswers),
+            MyItemDetailsLookup(rvAnswers),
+            StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectAnything()
+        ).build()
+
+        adapter.tracker = tracker
         startTimer()
         setTotalQuestions()
 
         val skipBtn = findViewById<Button>(R.id.skip)
-        skipBtn.setOnClickListener{
-            list.clear()
-            list.addAll(updateList(db))
+        skipBtn.setOnClickListener {
+            adapter.list.clear()
+            val list = adapter.getSelectedAnsList()
+            adapter.selectedList.clear()
+            adapter.list.addAll(updateList(db))
             val animation = AnimationUtils.loadAnimation(this, R.anim.item_animation_fall_down)
             question.startAnimation(animation)
             rvAnswers.scheduleLayoutAnimation()
