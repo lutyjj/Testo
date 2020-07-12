@@ -1,29 +1,25 @@
 package by.lutyjj.testo
 
 import AnswerAdapter
-import MyItemDetailsLookup
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.selection.SelectionPredicates
-import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
-import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quiz.R
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
-    var tracker: SelectionTracker<Long>? = null
     private val adapter = AnswerAdapter()
-    private lateinit var list: ArrayList<String>
     private var totalQuestions: Int = 0
+    private var totalMistakes: Int = 0
+    private lateinit var answerList: ArrayList<String>
+    private lateinit var correctList: ArrayList<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,43 +27,47 @@ class MainActivity : AppCompatActivity() {
 
         val db = DatabaseHelper(this)
         val question = findViewById<TextView>(R.id.questionTitle)
-
+        val mistakesTv = findViewById<TextView>(R.id.mistakes_counter)
         val rvAnswers = findViewById<View>(R.id.rvAnswers) as RecyclerView
         rvAnswers.adapter = adapter
-        adapter.list = updateList(db)
+        updateList(db)
+        adapter.list = answerList
         adapter.notifyDataSetChanged()
 
         rvAnswers.layoutManager = LinearLayoutManager(this)
-        rvAnswers.addItemDecoration(
-            MarginItemDecoration(
-                resources.getDimension(R.dimen.default_padding).toInt()
-            )
-        )
+        rvAnswers.addItemDecoration(MarginItemDecoration(resources.getDimension(R.dimen.default_padding).toInt()))
 
-        tracker = SelectionTracker.Builder<Long>(
-            "mySelection",
-            rvAnswers,
-            StableIdKeyProvider(rvAnswers),
-            MyItemDetailsLookup(rvAnswers),
-            StorageStrategy.createLongStorage()
-        ).withSelectionPredicate(
-            SelectionPredicates.createSelectAnything()
-        ).build()
-
-        adapter.tracker = tracker
-        startTimer()
         setTotalQuestions()
+        startTimer()
 
-        val skipBtn = findViewById<Button>(R.id.skip)
-        skipBtn.setOnClickListener {
+        fun nextQuestion() {
+            mistakesTv.text = totalMistakes.toString()
             adapter.list.clear()
-            val list = adapter.getSelectedAnsList()
-            adapter.selectedList.clear()
-            adapter.list.addAll(updateList(db))
-            val animation = AnimationUtils.loadAnimation(this, R.anim.item_animation_fall_down)
+            adapter.clearSelectedAnsList()
+            updateList(db)
+            adapter.list.addAll(answerList)
+            val animation = AnimationUtils.loadAnimation(this, R.anim.item_animation)
             question.startAnimation(animation)
             rvAnswers.scheduleLayoutAnimation()
             adapter.notifyDataSetChanged()
+        }
+
+        val skipBtn = findViewById<Button>(R.id.skip)
+        skipBtn.setOnClickListener {
+            nextQuestion()
+        }
+
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener{
+            val list = adapter.getSelectedAnsList()
+            list.sort()
+            if(correctList == list)
+                Toast.makeText(this, "Correct", Toast.LENGTH_SHORT).show()
+            else {
+                totalMistakes++
+                Toast.makeText(this, "Wrong", Toast.LENGTH_SHORT).show()
+            }
+            nextQuestion()
         }
     }
 
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         countUpTimer.start()
     }
 
-    private fun updateList(db: DatabaseHelper): ArrayList<String> {
+    private fun updateList(db: DatabaseHelper) {
         val question = findViewById<TextView>(R.id.questionTitle)
         val questionCursor = db.questions
         totalQuestions = questionCursor.count
@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 correctList.add(c.getColumnIndex("is_correct"))
         } while (c.moveToNext())
 
-        return answerList
+        this.answerList = answerList
+        this.correctList = correctList
     }
 }

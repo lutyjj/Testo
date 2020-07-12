@@ -37,12 +37,12 @@
             tools:text="23/128" />
 
         <TextView
-            android:id="@+id/wrong_counter"
+            android:id="@+id/mistakes_counter"
             style="@style/AppToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="12"
+            android:text="0"
             android:textColor="@android:color/holo_red_light"
             android:textStyle="bold" />
 
@@ -64,7 +64,6 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
-            android:id="@+id/questionLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans"
@@ -105,7 +104,6 @@
             android:paddingTop="4dp">
 
             <Button
-                android:id="@+id/bookmark"
                 style="@style/BottomButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

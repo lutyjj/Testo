@@ -2,7 +2,6 @@
     android:duration="@integer/anim_duration_long">
 
     <alpha
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:fillAfter="true"
         android:fromAlpha="0.0"
         android:interpolator="@android:anim/accelerate_interpolator"
