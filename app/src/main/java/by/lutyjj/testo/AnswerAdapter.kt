@@ -3,7 +3,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.quiz.R
+import com.lutyjj.testo.R
 
 class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
     var list: ArrayList<String> = ArrayList()
