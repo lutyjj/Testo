@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lutyjj.testo.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.lutyjj.testo.R
 
 class MainActivity : AppCompatActivity() {
     private val adapter = AnswerAdapter()
@@ -112,9 +112,9 @@ class MainActivity : AppCompatActivity() {
         totalQuestions = questionCursor.count
         updateQuestionCounter()
 
-        var questionIndex = (1 .. totalQuestions).random()
+        var questionIndex = (1..totalQuestions).random()
         while (answeredQuestions.contains(questionIndex)) {
-            questionIndex = (1 .. totalQuestions).random()
+            questionIndex = (1..totalQuestions).random()
         }
 
         currentQuestion = questionIndex
@@ -122,25 +122,20 @@ class MainActivity : AppCompatActivity() {
         question.text = questionCursor.getString(1)
 
         val c = db.getAnswers(questionIndex)
-        val answerList: ArrayList<String> = ArrayList()
-        val correctList: ArrayList<String> = ArrayList()
-        do {
-            answerList.add(c.getString(0))
-            val isCorrect = c.getInt(1)
-            if (isCorrect == 1)
-                correctList.add(c.getString(0))
-        } while (c.moveToNext())
+
+        val answerList: ArrayList<Pair<String, Int>> = ArrayList()
+        do answerList.add(c.getString(0) to c.getInt(1))
+        while (c.moveToNext())
 
         answerList.shuffle()
-        val correctListShuffled = ArrayList<Int>()
-        for ((index, answer) in answerList.withIndex()) {
-            if (correctList.contains(answer)) {
-                correctListShuffled.add(index)
-            }
-        }
 
-        this.answerList = answerList
-        this.correctList = correctListShuffled
+        val correctList = ArrayList<Int>()
+        for ((index, answer) in answerList.unzip().second.withIndex())
+            if (answer == 1)
+                correctList.add(index)
+
+        this.answerList = answerList.unzip().first as ArrayList<String>
+        this.correctList = correctList
     }
 
     private fun updateQuestion() {

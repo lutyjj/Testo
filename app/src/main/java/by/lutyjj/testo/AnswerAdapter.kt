@@ -40,10 +40,6 @@ class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = list.size
 
-    fun highlightAnswers() {
-
-    }
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var answerItem: TextView = view.findViewById(R.id.answer_title)
     }
