@@ -4,151 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorToolbar"
-    android:fitsSystemWindows="true"
     tools:context="by.lutyjj.testo.MainActivity">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorToolbar"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:contentInsetStart="0dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/timer"
+            android:id="@+id/textView"
             style="@style/AppToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="TextView"
-            tools:text="0:28" />
-
-        <TextView
-            android:id="@+id/question_counter"
-            style="@style/AppToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="App"
-            tools:text="23/128" />
-
-        <TextView
-            android:id="@+id/mistakes_counter"
-            style="@style/AppToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="0"
-            android:textColor="@android:color/holo_red_light"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/questionLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/rvAnswers"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/open_sans"
-            android:text="Pytanie:"
-            android:textStyle="bold" />
+            android:text="@string/main_activity_title"
+            android:textSize="22sp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="17dp" />
+    </androidx.appcompat.widget.Toolbar>
 
-        <TextView
-            android:id="@+id/questionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/product_sans_regular"
-            android:layoutAnimation="@anim/layout_animation"
-            android:text="questionTitle"
-            android:textColor="@android:color/primary_text_light"
-            android:textSize="24sp">
-
-        </TextView>
-
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        app:cardElevation="4dp"
-        app:cardUseCompatPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingTop="4dp">
-
-            <Button
-                style="@style/BottomButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_baseline_bookmark_border_24"
-                android:text="Bookmark"
-                android:textColor="@android:color/primary_text_light" />
-
-            <Button
-                android:id="@+id/skip"
-                style="@style/BottomButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:drawableTop="@drawable/ic_baseline_navigate_next_24"
-                android:text="Skip" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAnswers"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layoutAnimation="@anim/layout_animation"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/questionLayout"
-        tools:itemCount="5"
-        tools:listitem="@layout/item_answer">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_baseline_done_outline_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

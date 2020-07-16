@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Testo</string>
+    <string name="main_activity_title">Testo</string>
+    <string name="question_label">Pytanie:</string>
+    <string name="question_title">questionTitle</string>
+    <string name="button_bookmark">Zakładki</string>
+    <string name="button_skip">Pomiń</string>
+</resources>
