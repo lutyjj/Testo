@@ -43,7 +43,7 @@ class DatabaseHelper(context: Context?) :
     }
 
     companion object {
-        private const val DATABASE_NAME = "sk.db"
+        private const val DATABASE_NAME = "test.db"
         private const val DATABASE_VERSION = 1
     }
 }

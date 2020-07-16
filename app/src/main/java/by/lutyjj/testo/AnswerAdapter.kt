@@ -8,6 +8,7 @@ import com.lutyjj.testo.R
 class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
     var list: ArrayList<String> = ArrayList()
     var selectedList: ArrayList<Int> = ArrayList()
+    var correctList: ArrayList<Int> = ArrayList()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val ansText = list[position]
@@ -15,11 +16,18 @@ class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
         answerItem.isActivated = false
         answerItem.text = ansText
 
-        answerItem.setOnClickListener {
-            if (!answerItem.isActivated && !selectedList.contains(position))
-                selectedList.add(position)
-            else selectedList.remove(position)
-            answerItem.isActivated = !answerItem.isActivated
+        if (correctList.contains(position) && selectedList.contains(position))
+            answerItem.setBackgroundResource(R.drawable.item_answer_correct)
+        else if (correctList.contains(position) && !selectedList.contains(position))
+            answerItem.setBackgroundResource(R.drawable.item_answer_wrong)
+        else {
+            answerItem.setBackgroundResource(R.drawable.item_background)
+            answerItem.setOnClickListener {
+                if (!answerItem.isActivated && !selectedList.contains(position))
+                    selectedList.add(position)
+                else selectedList.remove(position)
+                answerItem.isActivated = !answerItem.isActivated
+            }
         }
     }
 
@@ -31,6 +39,10 @@ class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun highlightAnswers() {
+
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var answerItem: TextView = view.findViewById(R.id.answer_title)

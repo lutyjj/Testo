@@ -48,11 +48,13 @@ class MainActivity : AppCompatActivity() {
             if (isFabReady) {
                 fab.setImageResource(R.drawable.ic_baseline_done_outline_24)
                 fab.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent))
+                resetCorrectAnswers()
                 updateQuestion()
             }
             else {
                 val list = adapter.selectedList
                 list.sort()
+                highlightAnswers()
                 if (correctList == list) {
                     isFabReady
                     answeredQuestions.add(currentQuestion)
@@ -67,6 +69,15 @@ class MainActivity : AppCompatActivity() {
             }
             isFabReady = !isFabReady
         }
+    }
+
+    private fun highlightAnswers() {
+        adapter.correctList = correctList
+        for (i in correctList) adapter.notifyItemChanged(i)
+    }
+
+    private fun resetCorrectAnswers() {
+        adapter.correctList.clear()
     }
 
     private fun setTimer() {
