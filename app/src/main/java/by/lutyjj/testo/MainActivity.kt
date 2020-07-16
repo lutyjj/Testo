@@ -123,16 +123,24 @@ class MainActivity : AppCompatActivity() {
 
         val c = db.getAnswers(questionIndex)
         val answerList: ArrayList<String> = ArrayList()
-        val correctList: ArrayList<Int> = ArrayList()
+        val correctList: ArrayList<String> = ArrayList()
         do {
             answerList.add(c.getString(0))
             val isCorrect = c.getInt(1)
             if (isCorrect == 1)
-                correctList.add(c.position)
+                correctList.add(c.getString(0))
         } while (c.moveToNext())
 
+        answerList.shuffle()
+        val correctListShuffled = ArrayList<Int>()
+        for ((index, answer) in answerList.withIndex()) {
+            if (correctList.contains(answer)) {
+                correctListShuffled.add(index)
+            }
+        }
+
         this.answerList = answerList
-        this.correctList = correctList
+        this.correctList = correctListShuffled
     }
 
     private fun updateQuestion() {
