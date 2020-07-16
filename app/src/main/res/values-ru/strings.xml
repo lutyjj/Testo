@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Testo</string>
-    <string name="main_activity_title">Testo</string>
+    <string name="main_activity_title">Тесты</string>
     <string name="question_label">Вопрос:</string>
     <string name="question_title">questionTitle</string>
     <string name="button_bookmark">В закладки</string>
     <string name="button_skip">Пропустить</string>
+    <string name="last_updated">Последнее обновление:</string>
 </resources>

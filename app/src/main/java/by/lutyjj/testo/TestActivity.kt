@@ -1,7 +1,9 @@
 package by.lutyjj.testo
 
-import AnswerAdapter
 import android.content.res.ColorStateList
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteQueryBuilder
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
@@ -14,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lutyjj.testo.R
 
-class TestActivity : AppCompatActivity() {
+class TestActivity() : AppCompatActivity() {
     private val adapter = AnswerAdapter()
     private var totalQuestions: Int = 0
     private var totalMistakes: Int = 0
@@ -23,7 +25,7 @@ class TestActivity : AppCompatActivity() {
     private var isFabReady: Boolean = false
     private var answeredQuestions: ArrayList<Int> = ArrayList()
 
-    private lateinit var db: DatabaseHelper
+    private lateinit var db: SQLiteDatabase
     private lateinit var answerList: ArrayList<String>
     private lateinit var correctList: ArrayList<Int>
 
@@ -40,7 +42,12 @@ class TestActivity : AppCompatActivity() {
             )
         )
 
-        db = DatabaseHelper(this)
+        val path = getExternalFilesDir(null)?.absolutePath + "/" +
+                intent.getStringExtra("db_name")
+        db = SQLiteDatabase.openDatabase(
+            path, null,
+            SQLiteDatabase.OPEN_READONLY
+        )
         setTimer()
         updateQuestion()
 
@@ -60,7 +67,6 @@ class TestActivity : AppCompatActivity() {
                 list.sort()
                 highlightAnswers()
                 if (correctList == list) {
-                    isFabReady
                     answeredQuestions.add(currentQuestion)
                     fab.backgroundTintList =
                         ColorStateList.valueOf(getColor(R.color.fabGreen))
@@ -111,22 +117,47 @@ class TestActivity : AppCompatActivity() {
         countUpTimer.start()
     }
 
+    private fun getQuestions(): Cursor {
+        val qb = SQLiteQueryBuilder()
+        val sqlSelect = arrayOf("question_id", "title")
+        val sqlTables = "questions"
+        qb.tables = sqlTables
+        val cursor = qb.query(
+            db, sqlSelect, null, null,
+            null, null, null
+        )
+        cursor.moveToFirst()
+        return cursor
+    }
+
+    private fun getAnswers(questionIndex: Int): Cursor {
+        val qb = SQLiteQueryBuilder()
+        val sqlSelect = arrayOf("answer_text", "is_correct")
+        val sqlTables = "answers"
+        qb.tables = sqlTables
+        val cursor = qb.query(
+            db, sqlSelect, "question_id = $questionIndex", null,
+            null, null, null
+        )
+        cursor.moveToFirst()
+        return cursor
+    }
+
     private fun updateData() {
         val question = findViewById<TextView>(R.id.questionTitle)
-        val questionCursor = db.questions
+        val questionCursor = getQuestions()
         totalQuestions = questionCursor.count
         updateQuestionCounter()
 
         var questionIndex = (1..totalQuestions).random()
-        while (answeredQuestions.contains(questionIndex)) {
+        while (answeredQuestions.contains(questionIndex))
             questionIndex = (1..totalQuestions).random()
-        }
 
         currentQuestion = questionIndex
         questionCursor.moveToPosition(questionIndex - 1)
         question.text = questionCursor.getString(1)
 
-        val c = db.getAnswers(questionIndex)
+        val c = getAnswers(questionIndex)
 
         val answerList: ArrayList<Pair<String, Int>> = ArrayList()
         do answerList.add(c.getString(0) to c.getInt(1))
