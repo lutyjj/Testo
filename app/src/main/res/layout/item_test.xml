@@ -10,38 +10,48 @@
     <TextView
         android:id="@+id/test_title"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:clickable="true"
+        android:layout_height="wrap_content"
         android:fontFamily="@font/product_sans_regular"
         android:gravity="center"
         android:textColor="@android:color/primary_text_light"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="SK" />
 
     <TextView
-        android:id="@+id/last_updated"
+        android:id="@+id/update_label"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/product_sans_regular"
         android:gravity="center"
         android:text="@string/last_updated"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Last updated:" />
 
-    <ProgressBar
-        android:id="@+id/progressBar3"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/total_questions"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:progress="50"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/product_sans_regular"
+        android:text="@string/total_questions"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_title"
+        tools:text="111 questions" />
+
+    <TextView
+        android:id="@+id/update_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/product_sans_regular"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="12.06.07" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

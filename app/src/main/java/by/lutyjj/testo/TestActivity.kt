@@ -45,7 +45,7 @@ class TestActivity() : AppCompatActivity() {
         val path = getExternalFilesDir(null)?.absolutePath + "/" +
                 intent.getStringExtra("db_name")
         db = SQLiteDatabase.openDatabase(
-            path, null,
+            "$path.db", null,
             SQLiteDatabase.OPEN_READONLY
         )
         setTimer()
