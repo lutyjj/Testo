@@ -7,4 +7,5 @@
     <string name="button_skip">Пропустить</string>
     <string name="last_updated">Последнее обновление:</string>
     <string name="total_questions">%1$d вопросов</string>
+    <string name="import_new_db">Импорт</string>
 </resources>

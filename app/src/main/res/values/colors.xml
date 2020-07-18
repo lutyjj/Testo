@@ -7,4 +7,6 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="fabRed">#F44336</color>
     <color name="fabGreen">#76e89e</color>
+    <color name="progressBarBackground">#E9E9E9</color>
+    <color name="progressBarProgress">#76E89E</color>
 </resources>

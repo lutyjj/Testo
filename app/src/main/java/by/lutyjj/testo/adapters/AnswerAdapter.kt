@@ -1,4 +1,4 @@
-package by.lutyjj.testo
+package by.lutyjj.testo.adapters
 
 import android.view.LayoutInflater
 import android.view.View

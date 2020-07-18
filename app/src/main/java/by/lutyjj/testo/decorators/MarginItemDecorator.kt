@@ -1,4 +1,4 @@
-package by.lutyjj.testo
+package by.lutyjj.testo.decorators
 
 import android.graphics.Rect
 import android.view.View

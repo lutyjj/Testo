@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.lutyjj.testo.adapters.AnswerAdapter
+import by.lutyjj.testo.decorators.MarginItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.lutyjj.testo.R
 
@@ -45,7 +47,7 @@ class TestActivity() : AppCompatActivity() {
         val path = getExternalFilesDir(null)?.absolutePath + "/" +
                 intent.getStringExtra("db_name")
         db = SQLiteDatabase.openDatabase(
-            "$path.db", null,
+            path, null,
             SQLiteDatabase.OPEN_READONLY
         )
         setTimer()

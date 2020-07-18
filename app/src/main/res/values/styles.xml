@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/colorAccent</item>
@@ -8,18 +9,38 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="BottomButton" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+    <style name="BottomButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="fontFamily">@font/google_sans_regular</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/primary_text_light</item>
-        <item name="fontFamily">@font/product_sans_regular</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="drawableTint">@android:color/black</item>
+    </style>
+
+    <style name="MainMenuButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="fontFamily">@font/google_sans_regular</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:background">@drawable/item_answer</item>
+        <item name="android:elevation">0dp</item>>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:translationZ">0dp</item>
     </style>
 
     <style name="AppToolbar" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/product_sans_regular</item>
+        <item name="fontFamily">@font/google_sans_regular</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@android:color/primary_text_light</item>
     </style>
 
+    <style name="ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:layout_height">12dp</item>
+        <item name="android:progressDrawable">@drawable/progressbar</item>
+    </style>
 </resources>
