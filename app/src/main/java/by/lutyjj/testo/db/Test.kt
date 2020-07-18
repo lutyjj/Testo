@@ -17,7 +17,8 @@ import java.util.*
 data class Test(
     @PrimaryKey val name: String,
     @ColumnInfo(name = "total_questions") val totalQuestions: Int,
-    @ColumnInfo(name = "completed_questions") val completedQuestions: Int,
+    @ColumnInfo(name = "answered_questions_count") val answeredQuestionsCount: Int,
+    @ColumnInfo(name = "answered_questions") val answeredQuestions: String?,
     @ColumnInfo(name = "update_date") val updateDate: Date
 )
 
@@ -37,9 +38,12 @@ interface TestDao {
 
     @Query("SELECT name FROM test")
     suspend fun getNames(): List<String>
+
+    @Update
+    suspend fun update(test: Test)
 }
 
-class DateConverter {
+class Converters {
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return value?.let { Date(it) }
@@ -51,8 +55,8 @@ class DateConverter {
     }
 }
 
-@Database(entities = [Test::class], version = 1)
-@TypeConverters(DateConverter::class)
+@Database(entities = [Test::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun testDao(): TestDao
 
@@ -113,6 +117,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 file,
                                 cursor.count,
                                 0,
+                                null,
                                 Date()
                             )
                             cursor.close()
@@ -135,6 +140,10 @@ class TestRepository(private val testDao: TestDao) {
     suspend fun deleteAll() {
         testDao.deleteAll()
     }
+
+    suspend fun update(test: Test) {
+        testDao.update(test)
+    }
 }
 
 class TestViewModel(application: Application) : AndroidViewModel(application) {
@@ -156,5 +165,9 @@ class TestViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAll()
+    }
+
+    fun update(test: Test) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(test)
     }
 }

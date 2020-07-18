@@ -3,6 +3,7 @@ package by.lutyjj.testo.adapters
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,11 +39,14 @@ class TestAdapter internal constructor(context: Context) :
         val testTotalQuestions = item.findViewById<TextView>(R.id.total_questions)
         val testUpdateDate = item.findViewById<TextView>(R.id.update_date)
         val testProgress = item.findViewById<ProgressBar>(R.id.progress_bar)
+        val testAnswered = test.answeredQuestions
 
-        if (test.totalQuestions == 0 || test.completedQuestions == 0) {
+        if (test.totalQuestions == 0 || test.answeredQuestionsCount == 0) {
             testProgress.progress = 0
         } else {
-            testProgress.progress = test.totalQuestions.div(test.completedQuestions)
+            testProgress.progress =
+                (test.answeredQuestionsCount * 100f / test.totalQuestions).toInt()
+            Log.i("Progress: ", testProgress.progress.toString())
         }
 
         testTitle.text = test.name.replace(".db", "")
@@ -52,6 +56,7 @@ class TestAdapter internal constructor(context: Context) :
         item.setOnClickListener {
             val intent = Intent(context, TestActivity::class.java)
             intent.putExtra("db_name", test.name)
+            intent.putExtra("answered_questions", testAnswered)
             context.startActivity(intent)
         }
     }

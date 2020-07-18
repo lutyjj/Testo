@@ -3,7 +3,7 @@
     <string name="main_activity_title">Testy</string>
     <string name="question_label">Pytanie:</string>
     <string name="question_title">questionTitle</string>
-    <string name="button_bookmark">Zakładki</string>
+    <string name="button_pause_and_save">Zakładki</string>
     <string name="button_skip">Pomiń</string>
     <string name="last_updated">Ostatnio zaktualizowany:</string>
     <string name="total_questions">%1$d pytań</string>

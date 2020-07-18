@@ -14,15 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.lutyjj.testo.adapters.AnswerAdapter
+import by.lutyjj.testo.db.Test
+import by.lutyjj.testo.db.TestViewModel
 import by.lutyjj.testo.decorators.MarginItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import com.lutyjj.testo.R
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TestActivity() : AppCompatActivity() {
     private val adapter = AnswerAdapter()
     private var totalQuestions: Int = 0
     private var totalMistakes: Int = 0
-    private var totalCorrect: Int = 0
     private var currentQuestion: Int = 0
     private var isFabReady: Boolean = false
     private var answeredQuestions: ArrayList<Int> = ArrayList()
@@ -30,6 +34,8 @@ class TestActivity() : AppCompatActivity() {
     private lateinit var db: SQLiteDatabase
     private lateinit var answerList: ArrayList<String>
     private lateinit var correctList: ArrayList<Int>
+    private lateinit var dbName: String
+    private lateinit var previouslyAnswered: ArrayList<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +50,22 @@ class TestActivity() : AppCompatActivity() {
             )
         )
 
+        dbName = intent.getStringExtra("db_name")!!
         val path = getExternalFilesDir(null)?.absolutePath + "/" +
-                intent.getStringExtra("db_name")
+                dbName
         db = SQLiteDatabase.openDatabase(
             path, null,
             SQLiteDatabase.OPEN_READONLY
         )
+
         setTimer()
         updateQuestion()
 
         val skipBtn = findViewById<Button>(R.id.skip_button)
         skipBtn.setOnClickListener { updateQuestion() }
+
+        val saveBtn = findViewById<Button>(R.id.save_button)
+        saveBtn.setOnClickListener { saveState() }
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
@@ -72,7 +83,6 @@ class TestActivity() : AppCompatActivity() {
                     answeredQuestions.add(currentQuestion)
                     fab.backgroundTintList =
                         ColorStateList.valueOf(getColor(R.color.fabGreen))
-                    totalCorrect++
                 } else {
                     fab.setImageResource(R.drawable.ic_close_outline)
                     fab.backgroundTintList =
@@ -82,6 +92,14 @@ class TestActivity() : AppCompatActivity() {
             }
             isFabReady = !isFabReady
         }
+    }
+
+    private fun saveState() {
+        val testRepo = TestViewModel(this.application)
+        val answersJson = Gson().toJson(answeredQuestions)
+
+        testRepo.update(Test(dbName, totalQuestions, answeredQuestions.size, answersJson, Date()))
+        finish()
     }
 
     private fun highlightAnswers() {
@@ -152,8 +170,13 @@ class TestActivity() : AppCompatActivity() {
         updateQuestionCounter()
 
         var questionIndex = (1..totalQuestions).random()
-        while (answeredQuestions.contains(questionIndex))
-            questionIndex = (1..totalQuestions).random()
+        if (answeredQuestions.size == totalQuestions) {
+            saveState()
+            finish()
+        } else {
+            while (answeredQuestions.contains(questionIndex))
+                questionIndex = (1..totalQuestions).random()
+        }
 
         currentQuestion = questionIndex
         questionCursor.moveToPosition(questionIndex - 1)
@@ -194,6 +217,7 @@ class TestActivity() : AppCompatActivity() {
 
     private fun updateQuestionCounter() {
         val questionCounter = findViewById<TextView>(R.id.question_counter)
-        questionCounter.text = getString(R.string.question_counter, totalCorrect, totalQuestions)
+        questionCounter.text =
+            getString(R.string.question_counter, answeredQuestions.size, totalQuestions)
     }
 }

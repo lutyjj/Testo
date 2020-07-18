@@ -3,7 +3,7 @@
     <string name="main_activity_title">Тесты</string>
     <string name="question_label">Вопрос:</string>
     <string name="question_title">questionTitle</string>
-    <string name="button_bookmark">В закладки</string>
+    <string name="button_pause_and_save">Закончить и сохранить</string>
     <string name="button_skip">Пропустить</string>
     <string name="last_updated">Последнее обновление:</string>
     <string name="total_questions">%1$d вопросов</string>
