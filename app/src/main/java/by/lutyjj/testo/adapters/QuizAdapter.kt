@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lutyjj.testo.R
 
-class AnswerAdapter : RecyclerView.Adapter<AnswerAdapter.ViewHolder>() {
+class QuizAdapter : RecyclerView.Adapter<QuizAdapter.ViewHolder>() {
     var list: ArrayList<String> = ArrayList()
     var selectedList: ArrayList<Int> = ArrayList()
     var correctList: ArrayList<Int> = ArrayList()

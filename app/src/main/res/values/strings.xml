@@ -11,4 +11,6 @@
     <string name="last_updated">Last updated:</string>
     <string name="total_questions">%1$d questions</string>
     <string name="import_new_db">Import</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

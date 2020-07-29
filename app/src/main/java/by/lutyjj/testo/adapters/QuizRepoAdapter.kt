@@ -10,15 +10,15 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import by.lutyjj.testo.TestActivity
-import by.lutyjj.testo.db.Test
+import by.lutyjj.testo.QuizActivity
+import by.lutyjj.testo.db.Quiz
 import com.lutyjj.testo.R
 
-class TestAdapter internal constructor(context: Context) :
-    RecyclerView.Adapter<TestAdapter.ViewHolder>() {
+class QuizRepoAdapter internal constructor(context: Context) :
+    RecyclerView.Adapter<QuizRepoAdapter.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var tests = emptyList<Test>()
+    private var quizzes = emptyList<Quiz>()
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,21 +32,19 @@ class TestAdapter internal constructor(context: Context) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val test = tests[position]
+        val test = quizzes[position]
         val item = holder.itemView
 
         val testTitle = item.findViewById<TextView>(R.id.test_title)
         val testTotalQuestions = item.findViewById<TextView>(R.id.total_questions)
         val testUpdateDate = item.findViewById<TextView>(R.id.update_date)
         val testProgress = item.findViewById<ProgressBar>(R.id.progress_bar)
-        val testAnswered = test.answeredQuestions
 
         if (test.totalQuestions == 0 || test.answeredQuestionsCount == 0) {
             testProgress.progress = 0
         } else {
             testProgress.progress =
                 (test.answeredQuestionsCount * 100f / test.totalQuestions).toInt()
-            Log.i("Progress: ", testProgress.progress.toString())
         }
 
         testTitle.text = test.name.replace(".db", "")
@@ -54,19 +52,18 @@ class TestAdapter internal constructor(context: Context) :
         testUpdateDate.text = DateFormat.getDateFormat(context).format(test.updateDate)
 
         item.setOnClickListener {
-            val intent = Intent(context, TestActivity::class.java)
+            val intent = Intent(context, QuizActivity::class.java)
             intent.putExtra("db_name", test.name)
-            intent.putExtra("answered_questions", testAnswered)
             context.startActivity(intent)
         }
     }
 
-    internal fun setTests(tests: List<Test>) {
-        this.tests = tests
+    internal fun setTests(quizzes: List<Quiz>) {
+        this.quizzes = quizzes
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = tests.size
+    override fun getItemCount() = quizzes.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

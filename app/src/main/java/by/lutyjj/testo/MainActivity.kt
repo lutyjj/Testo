@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.lutyjj.testo.adapters.TestAdapter
+import by.lutyjj.testo.adapters.QuizRepoAdapter
 import by.lutyjj.testo.db.TestViewModel
 import by.lutyjj.testo.decorators.MarginItemDecoration
 import com.lutyjj.testo.R
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val rvAnswers = findViewById<View>(R.id.rvTests) as RecyclerView
-        val adapter = TestAdapter(this)
+        val adapter = QuizRepoAdapter(this)
         rvAnswers.adapter = adapter
         rvAnswers.layoutManager = LinearLayoutManager(this)
         rvAnswers.addItemDecoration(
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         testViewModel = ViewModelProvider(this).get(TestViewModel::class.java)
-        testViewModel.allTests.observe(this, Observer { tests ->
+        testViewModel.allQuizzes.observe(this, Observer { tests ->
             tests?.let { adapter.setTests(it) }
         })
     }

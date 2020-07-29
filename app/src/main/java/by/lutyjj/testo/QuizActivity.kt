@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import by.lutyjj.testo.adapters.AnswerAdapter
-import by.lutyjj.testo.db.Test
+import by.lutyjj.testo.adapters.QuizAdapter
+import by.lutyjj.testo.db.Quiz
 import by.lutyjj.testo.db.TestViewModel
 import by.lutyjj.testo.decorators.MarginItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,8 +23,8 @@ import com.lutyjj.testo.R
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TestActivity() : AppCompatActivity() {
-    private val adapter = AnswerAdapter()
+class QuizActivity() : AppCompatActivity() {
+    private val adapter = QuizAdapter()
     private var totalQuestions: Int = 0
     private var totalMistakes: Int = 0
     private var currentQuestion: Int = 0
@@ -35,7 +35,6 @@ class TestActivity() : AppCompatActivity() {
     private lateinit var answerList: ArrayList<String>
     private lateinit var correctList: ArrayList<Int>
     private lateinit var dbName: String
-    private lateinit var previouslyAnswered: ArrayList<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,11 +93,16 @@ class TestActivity() : AppCompatActivity() {
         }
     }
 
+    private fun restoreState() {
+        val answered = Gson().fromJson(intent.getStringExtra("answered_questions"), answeredQuestions::class.java)
+        answeredQuestions = answered
+    }
+
     private fun saveState() {
         val testRepo = TestViewModel(this.application)
         val answersJson = Gson().toJson(answeredQuestions)
 
-        testRepo.update(Test(dbName, totalQuestions, answeredQuestions.size, answersJson, Date()))
+        testRepo.update(Quiz(dbName, totalQuestions, answeredQuestions.size, answersJson, Date()))
         finish()
     }
 

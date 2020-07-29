@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @Entity
-data class Test(
+data class Quiz(
     @PrimaryKey val name: String,
     @ColumnInfo(name = "total_questions") val totalQuestions: Int,
     @ColumnInfo(name = "answered_questions_count") val answeredQuestionsCount: Int,
@@ -23,24 +23,24 @@ data class Test(
 )
 
 @Dao
-interface TestDao {
-    @Query("SELECT * FROM test")
-    fun getAll(): LiveData<List<Test>>
+interface QuizDao {
+    @Query("SELECT * FROM quiz")
+    fun getAll(): LiveData<List<Quiz>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(test: Test)
+    suspend fun insert(quiz: Quiz)
 
-    @Query("DELETE FROM test")
+    @Query("DELETE FROM quiz")
     suspend fun deleteAll()
 
-    @Query("SELECT COUNT(*) FROM test")
+    @Query("SELECT COUNT(*) FROM quiz")
     suspend fun getSize(): Int
 
-    @Query("SELECT name FROM test")
+    @Query("SELECT name FROM quiz")
     suspend fun getNames(): List<String>
 
     @Update
-    suspend fun update(test: Test)
+    suspend fun update(quiz: Quiz)
 }
 
 class Converters {
@@ -55,10 +55,10 @@ class Converters {
     }
 }
 
-@Database(entities = [Test::class], version = 1, exportSchema = false)
+@Database(entities = [Quiz::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun testDao(): TestDao
+    abstract fun quizDao(): QuizDao
 
     companion object {
         @Volatile
@@ -75,7 +75,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "word_database"
                 ).addCallback(
-                    TestDatabaseCallback(
+                    QuizDbCallback(
                         scope,
                         context
                     )
@@ -85,7 +85,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private class TestDatabaseCallback(
+        private class QuizDbCallback(
             private val scope: CoroutineScope,
             private val context: Context
         ) :
@@ -95,13 +95,13 @@ abstract class AppDatabase : RoomDatabase() {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch {
-                        scanFolder(database.testDao())
+                        scanFolder(database.quizDao())
                     }
                 }
             }
 
-            suspend fun scanFolder(testDao: TestDao) {
-                if (testDao.getSize() == 0) {
+            suspend fun scanFolder(quizDao: QuizDao) {
+                if (quizDao.getSize() == 0) {
                     val files = context.getExternalFilesDir(null)?.listFiles()
                     files?.let {
                         val list = it.map { file -> file.name } as List<String>
@@ -113,7 +113,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 SQLiteDatabase.OPEN_READONLY
                             )
                             val cursor = db.rawQuery("SELECT * FROM questions", null)
-                            val test = Test(
+                            val test = Quiz(
                                 file,
                                 cursor.count,
                                 0,
@@ -121,7 +121,7 @@ abstract class AppDatabase : RoomDatabase() {
                                 Date()
                             )
                             cursor.close()
-                            testDao.insert(test)
+                            quizDao.insert(test)
                         }
                     }
                 }
@@ -130,44 +130,44 @@ abstract class AppDatabase : RoomDatabase() {
     }
 }
 
-class TestRepository(private val testDao: TestDao) {
-    val allTests: LiveData<List<Test>> = testDao.getAll()
+class QuizRepository(private val quizDao: QuizDao) {
+    val allQuizzes: LiveData<List<Quiz>> = quizDao.getAll()
 
-    suspend fun insert(test: Test) {
-        testDao.insert(test)
+    suspend fun insert(quiz: Quiz) {
+        quizDao.insert(quiz)
     }
 
     suspend fun deleteAll() {
-        testDao.deleteAll()
+        quizDao.deleteAll()
     }
 
-    suspend fun update(test: Test) {
-        testDao.update(test)
+    suspend fun update(quiz: Quiz) {
+        quizDao.update(quiz)
     }
 }
 
 class TestViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: TestRepository
-    val allTests: LiveData<List<Test>>
+    private val repository: QuizRepository
+    val allQuizzes: LiveData<List<Quiz>>
 
     init {
         val testsDao = AppDatabase.getDatabase(
             application,
             viewModelScope
-        ).testDao()
-        repository = TestRepository(testsDao)
-        allTests = repository.allTests
+        ).quizDao()
+        repository = QuizRepository(testsDao)
+        allQuizzes = repository.allQuizzes
     }
 
-    fun insert(test: Test) = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(test)
+    fun insert(quiz: Quiz) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(quiz)
     }
 
     fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.deleteAll()
     }
 
-    fun update(test: Test) = viewModelScope.launch(Dispatchers.IO) {
-        repository.update(test)
+    fun update(quiz: Quiz) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(quiz)
     }
 }
